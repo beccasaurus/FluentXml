@@ -94,26 +94,26 @@ namespace SafeXml {
 		}
 
 		/// <summary>Returns all of the ChildNodes under this node</summary>
-        public static List<XmlNode> Nodes(this XmlNode node) {
-            var nodes = new List<XmlNode>();
+		public static List<XmlNode> Nodes(this XmlNode node) {
+			var nodes = new List<XmlNode>();
 			if (node == null) return nodes;
-            foreach (XmlNode child in node.ChildNodes)
+			foreach (XmlNode child in node.ChildNodes)
 				nodes.Add(child);
 			return nodes;
 		}
 
 		// TODO provide a way to pass an arbitrary matcher lambda
 		/// <summary>Returns all of the nodes under this node that match the given tag.  Recursively searches children.</summary>
-        public static List<XmlNode> Nodes(this XmlNode node, string tag) {
-            var nodes = new List<XmlNode>();
+		public static List<XmlNode> Nodes(this XmlNode node, string tag) {
+			var nodes = new List<XmlNode>();
 			if (node == null) return nodes;
-            foreach (XmlNode child in node.ChildNodes) {
-                nodes.AddRange(child.Nodes(tag));
-                if (child.Name.ToLower() == tag.ToLower())
-                    nodes.Add(child);
-            }
-            return nodes;
-        } 	
+			foreach (XmlNode child in node.ChildNodes) {
+				nodes.AddRange(child.Nodes(tag));
+				if (child.Name.ToLower() == tag.ToLower())
+					nodes.Add(child);
+			}
+			return nodes;
+		} 	
 
 		/// <summary>If a node with this tag exists, we return it, else we create a new node with this tag and create it</summary>
 		public static XmlNode NodeOrNew(this XmlNode node, string tag) {
