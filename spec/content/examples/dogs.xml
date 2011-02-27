@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dogs>
+  <dog name="Rover" breed="Golden Retriever">
+    <toys>
+      <toy>Tennis Ball</toy>
+      <toy>Kong</toy>
+    </toys>
+  </dog>
+  <dog name="Snoopy" breed="Beagle">
+    <toys>
+      <toy>Charlie Brown's Football</toy>
+    </toys>
+  </dog>
+</dogs>

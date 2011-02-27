@@ -6,6 +6,6 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("FluentXml")]
 [assembly: AssemblyProduct("FluentXml")]
-[assembly: AssemblyDescription("Simple XmlDocument extension methods for making it easier to safely parse XML")]
+[assembly: AssemblyDescription("Simple XmlDocument extension methods for making it easier to work with XML")]
 [assembly: AssemblyCompany("remi Taylor")]
 [assembly: AssemblyCopyright("Copyright © 2011")]
