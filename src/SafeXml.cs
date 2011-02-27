@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Net;
+using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
@@ -114,28 +115,31 @@ namespace SafeXml {
             return nodes;
         } 	
 
-		// // Will find or create the tag
-		// public static XmlNode NodeOrNew(this XmlNode node, string tag) {
-		// 	if (node == null) return null;
-		// 	return node.Node(tag) ?? node.NewNode(tag);
-		// }
+		/// <summary>If a node with this tag exists, we return it, else we create a new node with this tag and create it</summary>
+		public static XmlNode NodeOrNew(this XmlNode node, string tag) {
+			if (node == null) return null;
+			return node.Node(tag) ?? node.NewNode(tag);
+		}
 
-		// public static XmlNode NewNode(this XmlNode node, string tag) {
-		// 	if (node == null) return null;
-		// 	var child = node.OwnerDocument.CreateElement(tag);
-		// 	node.AppendChild(child);
-		// 	return child;
-		// }
+		/// <summary>Creates and returns a new node with the given tag name as a child of the XmlNode we call this on</summary>
+		public static XmlNode NewNode(this XmlNode node, string tag) {
+			if (node == null) return null;
+			var child = node.OwnerDocument.CreateElement(tag);
+			node.AppendChild(child);
+			return child;
+		}
 
+		/// <summary>Returns the InnerText of this node (or null)</summary>
 		public static string Text(this XmlNode node) {
 			if (node == null) return null;
 			return node.InnerText;
 		}
 
-		// public static XmlNode Text(this XmlNode node, string value) {
-		// 	if (node != null) node.InnerText = value;
-		// 	return node;
-		// }
+		/// <summary>If this XmlNode exists, sets its InnerText to the provided value</summary>
+		public static XmlNode Text(this XmlNode node, string value) {
+			if (node != null) node.InnerText = value;
+			return node;
+		}
 
 		/// <summary>Returns a dictionary of this node's attribute names and values</summary>
 		/// <remarks>
@@ -151,34 +155,48 @@ namespace SafeXml {
 			return attrs;
 		}
 
+		/// <summary>If this node exists and has an attribute with the given name, returns the value of the attribute</summary>
 		public static string Attr(this XmlNode node, string attr) {
 			if (node == null)                       return null;
 			if (node.Attributes[attr] == null) return null;
 			return node.Attributes[attr].Value;
 		}
 
-		// public static XmlNode Attr(this XmlNode node, string attr, string value) {
-		// 	if (node == null) return null;
-		// 	var attribute = node.Attributes[attr];
-		// 	if (attribute == null) {
-		// 		attribute = node.OwnerDocument.CreateAttribute(attr);
-		// 		node.Attributes.Append(attribute);
-		// 	}
-		// 	attribute.Value = value;
-		// 	return node;
-		// }
+		/// <summary>Sets the value of an attribute on this node.  If the attribute exists, we update it, else we create a new attribute.</summary>
+		public static XmlNode Attr(this XmlNode node, string attr, string value) {
+			if (node == null) return null;
+			var attribute = node.Attributes[attr];
+			if (attribute == null) {
+				attribute = node.OwnerDocument.CreateAttribute(attr);
+				node.Attributes.Append(attribute);
+			}
+			attribute.Value = value;
+			return node;
+		}
 
-		// public static string ToXml(this XmlDocument doc) {
-		// 	if (doc == null) return null;
+		/// <summary>Writes the current XmlDocument out to a string using our default settings (eg. indented)</summary>
+		public static string ToXml(this XmlDocument doc) {
+			return doc.ToXml(true);
+		}
 
-		// 	var stream = new MemoryStream();
-		// 	var writer = XmlWriter.Create(stream, new XmlWriterSettings { Indent = true });
-		// 	doc.WriteTo(writer);
-		// 	writer.Flush();
-		// 	var buffer = stream.ToArray();
-		// 	var xml    = System.Text.Encoding.UTF8.GetString(buffer).Trim();
+		/// <summary>The most common option that we want to toggle is indentation.  This lets you do that easily.</summary>
+		public static string ToXml(this XmlDocument doc, bool indent) {
+			return doc.ToXml(new XmlWriterSettings { Indent = true });
+		}
 
-		// 	return xml;
-		// }
+		/// <summary>This ToXml takes the most low-level options ... if this doesn't work for you, then do it yourself!</summary>
+		public static string ToXml(this XmlDocument doc, XmlWriterSettings settings) {
+			if (doc == null) return null;
+
+			// TODO move all of this into a common method that Save() can use too
+			var stream = new MemoryStream();
+			var writer = XmlWriter.Create(stream, settings);
+			doc.WriteTo(writer);
+			writer.Flush();
+			var buffer = stream.ToArray();
+			var xml    = System.Text.Encoding.UTF8.GetString(buffer).Trim();
+
+			return xml;
+		}
 	}
 }

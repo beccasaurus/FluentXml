@@ -2,10 +2,18 @@ using System;
 using System.IO;
 using System.Xml;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using NUnit.Framework;
 using SafeXml;
 
 namespace SafeXml.Specs {
+
+	// little extension for fixing the xml we use to verify in our tests ... fixes the indentation etc ...
+	public static class FixXmlExtension {
+		public static string FixXml(this string str) {
+			return Regex.Replace(str, @"^\t\t\t\t", "", RegexOptions.Multiline).TrimStart('\n').Replace("'", "\"");
+		}
+	}
 
 	// If we need to split this into separate specs, we will, but let's just start with 1 basic spec ...
 	[TestFixture]
@@ -89,8 +97,29 @@ namespace SafeXml.Specs {
 			});
 		}
 
-		[Test][Ignore]
+		[Test]
 		public void can_set_attribute_values() {
+			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
+
+			// Modify existing attribute
+			doc.Node("dog").Attr("name").ShouldEqual("Lander");
+			doc.Node("dog").Attr("name", "Different name");
+			doc.Node("dog").Attr("name").ShouldEqual("Different name");
+			doc.ToXml().ShouldEqual(@"
+				<?xml version='1.0' encoding='utf-8'?>
+				<dogs>
+				  <dog name='Different name'>My Text</dog>
+				</dogs>".FixXml());
+
+			// Add new attribute
+			doc.Node("dog").Attr("breed").Should(Be.Null);
+			doc.Node("dog").Attr("breed", "Golden Retriever");
+			doc.Node("dog").Attr("breed").ShouldEqual("Golden Retriever");
+			doc.ToXml().ShouldEqual(@"
+				<?xml version='1.0' encoding='utf-8'?>
+				<dogs>
+				  <dog name='Different name' breed='Golden Retriever'>My Text</dog>
+				</dogs>".FixXml());
 		}
 
 		[Test]
@@ -98,19 +127,56 @@ namespace SafeXml.Specs {
 			ExampleCsprojDoc.Node("PropertyGroup RootNamespace").Text().ShouldEqual("ConsoleApplication2");
 		}
 
-		[Test][Ignore]
+		[Test]
 		public void can_set_node_text() {
+			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
+			doc.Node("dog").Text().ShouldEqual("My Text");
+			doc.Node("dog").Text("changed!");
+			doc.Node("dog").Text().ShouldEqual("changed!");
+
+			doc.ToXml().ShouldEqual(@"
+				<?xml version='1.0' encoding='utf-8'?>
+				<dogs>
+				  <dog name='Lander'>changed!</dog>
+				</dogs>".FixXml());
 		}
 
-		[Test][Ignore]
+		[Test]
 		public void can_find_or_create_a_node_by_tag_name() {
+			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander' /></dogs>");
+
+			doc.Node("dog").Node("breed").Should(Be.Null);
+
+			// Node doesn't exist, so it'll use NewNode
+			doc.Node("dog").NodeOrNew("breed").Text("hello world");
+			doc.ToXml().ShouldEqual(@"
+				<?xml version='1.0' encoding='utf-8'?>
+				<dogs>
+				  <dog name='Lander'>
+				    <breed>hello world</breed>
+				  </dog>
+				</dogs>".FixXml());
+
+			// Node doesn't exist, so we just return it
+			doc.Node("dog").NodeOrNew("breed").Text("changed!");
+			doc.ToXml().ShouldEqual(@"
+				<?xml version='1.0' encoding='utf-8'?>
+				<dogs>
+				  <dog name='Lander'>
+				    <breed>changed!</breed>
+				  </dog>
+				</dogs>".FixXml());
 		}
 
-		[Test][Ignore]
+		[Test]
 		public void can_call_ToXml_to_get_XML_text_for_XmlDocument() {
-			// without indentation
+			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
 
-			// with indentation
+			doc.ToXml().ShouldEqual(@"
+				<?xml version='1.0' encoding='utf-8'?>
+				<dogs>
+				  <dog name='Lander'>My Text</dog>
+				</dogs>".FixXml());
 		}
 
 	// TODO
