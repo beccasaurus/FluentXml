@@ -225,6 +225,30 @@ namespace FluentXml.Specs {
 			node.Attr("Condition").ShouldEqual(" '$(Configuration)' == '' ");
 		}
 
+		[Test]
+		public void can_find_nodes_that_are_under_other_nodes_by_calling_Nodes_with_multiple_tags() {
+			var doc = FluentXmlDocument.FromString(@"
+				<stuff>
+					<thing>hi</thing>
+					<more>
+						<thing>more thing 1</thing>
+						<thing>more thing 2</thing>
+					</more>
+					<other>
+						<whatever>
+							<thing>other thing 1</thing>
+							<thing>other thing 2</thing>
+						</whatever>
+					</other>
+				</stuff>	
+				");
+
+			doc.Nodes("thing").Select(x => x.Text()).ToArray().ShouldEqual(new string[]{ "hi", "more thing 1", "more thing 2", "other thing 1", "other thing 2" });
+			doc.Nodes("stuff more thing").Select(x => x.Text()).ToArray().ShouldEqual(new string[]{ "more thing 1", "more thing 2" });
+			doc.Nodes("other whatever thing").Select(x => x.Text()).ToArray().ShouldEqual(new string[]{ "other thing 1", "other thing 2" });
+			doc.Nodes("whatever thing").Select(x => x.Text()).ToArray().ShouldEqual(new string[]{ "other thing 1", "other thing 2" });
+		}
+
 	// TODO
 
 		[Test][Ignore]

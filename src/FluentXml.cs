@@ -111,8 +111,37 @@ namespace FluentXml {
 
 		/// <summary>Returns all of the nodes under this node that match the given tag.  Recursively searches children.</summary>
 		public static List<XmlNode> Nodes(this XmlNode node, string tag) {
-			return node.Nodes(n => n.Name.ToLower() == tag.ToLower());
+			if (tag.Contains(" "))
+				return node.Nodes(tag.Split(' '));
+			else
+				return node.Nodes(n => n.Name.ToLower() == tag.ToLower());
 		} 	
+
+		/// <summary>Get all of the nodes with the given tag, underneath each previous tag ... eg. Nodes("body", "ul", "li", "a")</summary>
+		public static List<XmlNode> Nodes(this XmlNode node, params string[] tags) {
+			var nodes = new List<XmlNode>();
+			if (node == null || tags.Length == 0) return nodes;
+
+			// Get the nodes for the first tag
+			nodes = node.Nodes(tags[0]);
+
+			// If only 1 tag was passed, don't keep searching, just return the nodes for the first tag
+			if (tags.Length == 1) return nodes;
+
+			// Start loop at 1, because we already looked for the first tag
+			for (int i = 1; i < tags.Length; i++) {
+				var innerResults = new List<XmlNode>();
+
+				// for each of the nodes that we've found so far, look under it for nodes that match the next tag
+				foreach (var previouslyFoundNode in nodes)
+					innerResults.AddRange(previouslyFoundNode.Nodes(tags[i]));
+
+				// overwrite our existing results with the nodes we just found
+				nodes = innerResults;
+			}
+
+			return nodes;
+		}
 
 		/// <summary>Returns all nodes (searches recursively) that match the given matcher (Func that should return true if it matches)</summary>
 		public static List<XmlNode> Nodes(this XmlNode node, XmlNodeMatcher matcher) {
