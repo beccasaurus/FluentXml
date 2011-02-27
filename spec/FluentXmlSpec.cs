@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
@@ -201,6 +202,27 @@ namespace FluentXml.Specs {
 				<dogs>
 				  <dog name='Different'>My Text</dog>
 				</dogs>".FixXml());
+		}
+
+		[Test]
+		public void can_find_nodes_that_match_an_arbitrary_matcher() {
+			ExampleCsprojDoc.Nodes("PropertyGroup").Count.ShouldEqual(7);
+
+			var nodesWithConditions = ExampleCsprojDoc.Nodes(n => n.Attr("Condition") != null);
+			nodesWithConditions.Count.ShouldEqual(8);
+
+			nodesWithConditions.First().Name.ShouldEqual("Configuration");
+			nodesWithConditions.First().Attr("Condition").ShouldEqual(" '$(Configuration)' == '' ");
+
+			nodesWithConditions.Last().Name.ShouldEqual("PropertyGroup");
+			nodesWithConditions.Last().Attr("Condition").ShouldEqual("'$(Configuration)|$(Platform)' == 'That|x86'");
+		}
+
+		[Test]
+		public void can_find_a_node_that_matches_an_arbitrary_matcher() {
+			var node = ExampleCsprojDoc.Node(n => n.Attr("Condition") != null);
+			node.Name.ShouldEqual("Configuration");
+			node.Attr("Condition").ShouldEqual(" '$(Configuration)' == '' ");
 		}
 
 	// TODO

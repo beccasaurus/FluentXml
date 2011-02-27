@@ -108,6 +108,10 @@ Sample usage:
       </dog>
     </dogs>"
 
+    // You can also pass in a lambda to Node() or Nodes() to find a node that matches some arbitrary condition
+    >> doc.Node(n => n.Attr("name") != null && n.Attr("name").StartsWith("S")).Attr("name");
+    "Snoopy"
+
 That's all?
 -----------
 

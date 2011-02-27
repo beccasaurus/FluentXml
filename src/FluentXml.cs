@@ -9,6 +9,8 @@ using System.Collections.Generic;
 /// <summary>The FluentXml namespace.  Use this to get the FluentXml extension methods.</summary>
 namespace FluentXml {
 
+	public delegate bool XmlNodeMatcher(XmlNode node);
+
 	/// <summary>Non-stupid XmlResolver.  Doesn't try to auto parse URIs found in the XML and EXPLODE if the parse fails.</summary>
 	/// <remarks>
 	/// See StackOverflow post:
@@ -79,9 +81,8 @@ namespace FluentXml {
 
 			if (tag.Contains(" "))
 				return node.Node(tag.Split(' '));
-
-			var tags = node.Nodes(tag);
-			return (tags != null && tags.Count > 0) ? tags[0] : null;
+			else
+				return node.Nodes(tag).FirstOrDefault(); // TODO update this do it doesn't have to find ALL nodes!
 		}
 
 		/// <summary>Node("foo", "bar") is a shortcut for calling Node("foo").Node("bar")</summary>
@@ -93,6 +94,12 @@ namespace FluentXml {
 			return result;
 		}
 
+		/// <summary>Returns first node that match the given matcher (Func that should return true if it matches)</summary>
+		public static XmlNode Node(this XmlNode node, XmlNodeMatcher matcher) {
+			if (node == null) return null;
+			return node.Nodes(matcher).FirstOrDefault();
+		}
+
 		/// <summary>Returns all of the ChildNodes under this node</summary>
 		public static List<XmlNode> Nodes(this XmlNode node) {
 			var nodes = new List<XmlNode>();
@@ -102,18 +109,22 @@ namespace FluentXml {
 			return nodes;
 		}
 
-		// TODO provide a way to pass an arbitrary matcher lambda
 		/// <summary>Returns all of the nodes under this node that match the given tag.  Recursively searches children.</summary>
 		public static List<XmlNode> Nodes(this XmlNode node, string tag) {
+			return node.Nodes(n => n.Name.ToLower() == tag.ToLower());
+		} 	
+
+		/// <summary>Returns all nodes (searches recursively) that match the given matcher (Func that should return true if it matches)</summary>
+		public static List<XmlNode> Nodes(this XmlNode node, XmlNodeMatcher matcher) {
 			var nodes = new List<XmlNode>();
 			if (node == null) return nodes;
 			foreach (XmlNode child in node.ChildNodes) {
-				nodes.AddRange(child.Nodes(tag));
-				if (child.Name.ToLower() == tag.ToLower())
+				nodes.AddRange(child.Nodes(matcher));
+				if (matcher.Invoke(child))
 					nodes.Add(child);
 			}
 			return nodes;
-		} 	
+		}
 
 		/// <summary>If a node with this tag exists, we return it, else we create a new node with this tag and create it</summary>
 		public static XmlNode NodeOrNew(this XmlNode node, string tag) {
@@ -157,7 +168,8 @@ namespace FluentXml {
 
 		/// <summary>If this node exists and has an attribute with the given name, returns the value of the attribute</summary>
 		public static string Attr(this XmlNode node, string attr) {
-			if (node == null)                       return null;
+			if (node == null)                  return null;
+			if (node.Attributes == null)       return null;
 			if (node.Attributes[attr] == null) return null;
 			return node.Attributes[attr].Value;
 		}
