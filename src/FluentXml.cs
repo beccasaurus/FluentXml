@@ -145,14 +145,28 @@ namespace FluentXml {
 
 		/// <summary>Returns all nodes (searches recursively) that match the given matcher (Func that should return true if it matches)</summary>
 		public static List<XmlNode> Nodes(this XmlNode node, XmlNodeMatcher matcher) {
+			return node.Nodes(matcher, false);
+		}
+
+		/// <summary>Returns a List of XmlNode matching the given matcher.  If onlyFindOne is true, we stop looking after we find 1 match.</summary>
+		public static List<XmlNode> Nodes(this XmlNode node, XmlNodeMatcher matcher, bool onlyFindOne) {
 			var nodes = new List<XmlNode>();
 			if (node == null) return nodes;
 			foreach (XmlNode child in node.ChildNodes) {
-				nodes.AddRange(child.Nodes(matcher));
-				if (matcher.Invoke(child))
+				if (matcher.Invoke(child)) {
 					nodes.Add(child);
+					if (onlyFindOne) break;
+				}
+
+				nodes.AddRange(child.Nodes(matcher));
+
+				if (onlyFindOne && nodes.Count > 0) break;
 			}
-			return nodes;
+			
+			if (onlyFindOne && nodes.Count > 1)
+				return new List<XmlNode> { nodes.First() };
+			else
+				return nodes;
 		}
 
 		/// <summary>If a node with this tag exists, we return it, else we create a new node with this tag and create it</summary>
