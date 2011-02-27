@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeXml", "src\SafeXml.csproj", "{5D8673F4-0239-4D86-9093-B46A2075E722}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentXml", "src\FluentXml.csproj", "{5D8673F4-0239-4D86-9093-B46A2075E722}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SafeXml.Specs", "spec\SafeXml.Specs.csproj", "{73123BFC-2A8A-4160-80FC-597A2B460C66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FluentXml.Specs", "spec\FluentXml.Specs.csproj", "{73123BFC-2A8A-4160-80FC-597A2B460C66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +21,6 @@ Global
 		{73123BFC-2A8A-4160-80FC-597A2B460C66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = src\SafeXml.csproj
+		StartupItem = src\FluentXml.csproj
 	EndGlobalSection
 EndGlobal

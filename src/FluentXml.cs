@@ -6,15 +6,15 @@ using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 
-/// <summary>The SafeXml namespace.  Use this to get the SafeXml extension methods.</summary>
-namespace SafeXml {
+/// <summary>The FluentXml namespace.  Use this to get the FluentXml extension methods.</summary>
+namespace FluentXml {
 
 	/// <summary>Non-stupid XmlResolver.  Doesn't try to auto parse URIs found in the XML and EXPLODE if the parse fails.</summary>
 	/// <remarks>
 	/// See StackOverflow post:
 	///   http://stackoverflow.com/questions/2899254/xdocument-parse-fails-due-to-resolution-error-how-to-disable-resolution
 	/// </remarks>
-	class UriSafeXmlResolver : XmlResolver {
+	class UriFluentXmlResolver : XmlResolver {
 		public override Uri ResolveUri (Uri baseUri, string relativeUri){ return baseUri; }
 		public override object GetEntity (Uri absoluteUri, string role, Type type){ return null; }
 		public override ICredentials Credentials { set {} }
@@ -22,16 +22,16 @@ namespace SafeXml {
 
 	/// <summary>Helper methods for getting an XmlDocument from a string or from a file.</summary>
 	/// <remarks>
-	/// There is NOTHING special about getting an XmlDocument from SafeXmlDocument versus 
+	/// There is NOTHING special about getting an XmlDocument from FluentXmlDocument versus 
 	/// instantiating and loading an XmlDocument yourself.
 	///
 	/// The only difference is that we use our own XmlResolver, by default, that doesn't 
 	/// try to resolve URIs because it's pretty darned annoying with your XML parser explodes 
 	/// because it tried to parse something that it thinks *should* be a URI.
 	/// </remarks>
-	public static class SafeXmlDocument {
+	public static class FluentXmlDocument {
 
-		/// <summary>Get an XmlDocument from the given XML string.  By default, we use our UriSafeXmlResolver.</summary>
+		/// <summary>Get an XmlDocument from the given XML string.  By default, we use our UriFluentXmlResolver.</summary>
 		/// <remarks>If the given string is null, we return null</remarks>
 		public static XmlDocument FromString(string xml) {
 			return FromString(xml, false);
@@ -44,13 +44,13 @@ namespace SafeXml {
 			var reader = new XmlTextReader(new StringReader(xml));
 
 			if (! resolveUris)
-				reader.XmlResolver = new UriSafeXmlResolver();
+				reader.XmlResolver = new UriFluentXmlResolver();
 
 			doc.Load(reader);
 			return doc;
 		}
 
-		/// <summary>Get an XmlDocument from the given XML file path.  By default, we use our UriSafeXmlResolver.</summary>
+		/// <summary>Get an XmlDocument from the given XML file path.  By default, we use our UriFluentXmlResolver.</summary>
 		/// <remarks>If the given path is null or does not exist, we return null</remarks>
 		public static XmlDocument FromFile(string path) {
 			return FromFile(path, false);
@@ -65,7 +65,7 @@ namespace SafeXml {
 		}
 	}
 
-	/// <summary>The main Xml extensions that make up SafeXml.  Mostly extensions on XmlDocument and XmlNode.</summary>
+	/// <summary>The main Xml extensions that make up FluentXml.  Mostly extensions on XmlDocument and XmlNode.</summary>
 	public static class XmlExtensions {
 
 		/// <summary>Returns the first XmlNode found with the given tag name</summary>

@@ -4,9 +4,9 @@ using System.Xml;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
-using SafeXml;
+using FluentXml;
 
-namespace SafeXml.Specs {
+namespace FluentXml.Specs {
 
 	// little extension for fixing the xml we use to verify in our tests ... fixes the indentation etc ...
 	public static class FixXmlExtension {
@@ -17,20 +17,20 @@ namespace SafeXml.Specs {
 
 	// If we need to split this into separate specs, we will, but let's just start with 1 basic spec ...
 	[TestFixture]
-	public class SafeXmlSpec : Spec {
+	public class FluentXmlSpec : Spec {
 
-		XmlDocument ExampleCsprojDoc = SafeXmlDocument.FromFile(Example("ConsoleApp.csproj"));
+		XmlDocument ExampleCsprojDoc = FluentXmlDocument.FromFile(Example("ConsoleApp.csproj"));
 
 		[Test]
 		public void can_easily_get_an_XmlDocument_for_a_given_string() {
-			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander' /><dog name='Murdoch' /></dogs>");
+			var doc = FluentXmlDocument.FromString("<dogs><dog name='Lander' /><dog name='Murdoch' /></dogs>");
 			doc.GetElementsByTagName("dogs").Count.ShouldEqual(1);
 			doc.GetElementsByTagName("dog").Count.ShouldEqual(2);
 		}
 
 		[Test]
 		public void can_easily_get_an_XmlDocument_for_a_given_file() {
-			var doc = SafeXmlDocument.FromFile(Example("ConsoleApp.csproj"));
+			var doc = FluentXmlDocument.FromFile(Example("ConsoleApp.csproj"));
 			doc.GetElementsByTagName("Project").Count.ShouldEqual(1);
 			doc.GetElementsByTagName("PropertyGroup").Count.ShouldEqual(7);
 		}
@@ -99,7 +99,7 @@ namespace SafeXml.Specs {
 
 		[Test]
 		public void can_set_attribute_values() {
-			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
+			var doc = FluentXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
 
 			// Modify existing attribute
 			doc.Node("dog").Attr("name").ShouldEqual("Lander");
@@ -129,7 +129,7 @@ namespace SafeXml.Specs {
 
 		[Test]
 		public void can_set_node_text() {
-			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
+			var doc = FluentXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
 			doc.Node("dog").Text().ShouldEqual("My Text");
 			doc.Node("dog").Text("changed!");
 			doc.Node("dog").Text().ShouldEqual("changed!");
@@ -143,7 +143,7 @@ namespace SafeXml.Specs {
 
 		[Test]
 		public void can_find_or_create_a_node_by_tag_name() {
-			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander' /></dogs>");
+			var doc = FluentXmlDocument.FromString("<dogs><dog name='Lander' /></dogs>");
 
 			doc.Node("dog").Node("breed").Should(Be.Null);
 
@@ -170,7 +170,7 @@ namespace SafeXml.Specs {
 
 		[Test]
 		public void can_call_ToXml_to_get_XML_text_for_XmlDocument() {
-			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
+			var doc = FluentXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
 
 			doc.ToXml().ShouldEqual(@"
 				<?xml version='1.0' encoding='utf-8'?>
@@ -181,7 +181,7 @@ namespace SafeXml.Specs {
 
 		[Test]
 		public void can_save_to_file() {
-			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
+			var doc = FluentXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
 
 			File.Exists(Temp("Foo.xml")).Should(Be.False);
 			doc.SaveToFile(Temp("Foo.xml"));

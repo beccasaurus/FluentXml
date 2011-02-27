@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{5D8673F4-0239-4D86-9093-B46A2075E722}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>SafeXml</RootNamespace>
-    <AssemblyName>SafeXml</AssemblyName>
+    <RootNamespace>FluentXml</RootNamespace>
+    <AssemblyName>FluentXml</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

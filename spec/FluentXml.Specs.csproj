@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{73123BFC-2A8A-4160-80FC-597A2B460C66}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>SafeXml.Specs</RootNamespace>
-    <AssemblyName>SafeXml.Specs</AssemblyName>
+    <RootNamespace>FluentXml.Specs</RootNamespace>
+    <AssemblyName>FluentXml.Specs</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -47,9 +47,9 @@
     <Compile Include="**\*Spec.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\src\SafeXml.csproj">
+    <ProjectReference Include="..\src\FluentXml.csproj">
       <Project>{5D8673F4-0239-4D86-9093-B46A2075E722}</Project>
-      <Name>SafeXml</Name>
+      <Name>FluentXml</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

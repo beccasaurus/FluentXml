@@ -3,9 +3,9 @@ using System.IO;
 using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace SafeXml.Specs {
+namespace FluentXml.Specs {
 
-	/// <summary>Global Before and After Hooks for all SafeXml.Specs</summary>
+	/// <summary>Global Before and After Hooks for all FluentXml.Specs</summary>
 	[SetUpFixture]
 	public class SpecsSetup {
 
