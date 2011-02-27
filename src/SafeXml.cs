@@ -188,7 +188,7 @@ namespace SafeXml {
 		public static string ToXml(this XmlDocument doc, XmlWriterSettings settings) {
 			if (doc == null) return null;
 
-			// TODO move all of this into a common method that Save() can use too
+			// TODO move all of this into a common method that SaveToFile() can use too
 			var stream = new MemoryStream();
 			var writer = XmlWriter.Create(stream, settings);
 			doc.WriteTo(writer);
@@ -197,6 +197,15 @@ namespace SafeXml {
 			var xml    = System.Text.Encoding.UTF8.GetString(buffer).Trim();
 
 			return xml;
+		}
+
+		/// <summary>Saves this XmlDocument to a file.  You can just use XmlDocument.Save, but this setup up indentation and whatnot.</summary>
+		/// <remarks>
+		/// Right now this is stupid and inefficient ... we just write doc.ToXml() to our file.  But ... meh ... it works.
+		/// </remarks>
+		public static void SaveToFile(this XmlDocument doc, string path) {
+			if (doc == null) return;
+			using (var writer = new StreamWriter(path)) writer.Write(doc.ToXml());
 		}
 	}
 }

@@ -179,6 +179,30 @@ namespace SafeXml.Specs {
 				</dogs>".FixXml());
 		}
 
+		[Test]
+		public void can_save_to_file() {
+			var doc = SafeXmlDocument.FromString("<dogs><dog name='Lander'>My Text</dog></dogs>");
+
+			File.Exists(Temp("Foo.xml")).Should(Be.False);
+			doc.SaveToFile(Temp("Foo.xml"));
+			File.Exists(Temp("Foo.xml")).Should(Be.True);
+
+			File.ReadAllText(Temp("Foo.xml")).ShouldEqual(@"
+				<?xml version='1.0' encoding='utf-8'?>
+				<dogs>
+				  <dog name='Lander'>My Text</dog>
+				</dogs>".FixXml());
+
+			// can overwrite ...
+			doc.Node("dog").Attr("name", "Different");
+			doc.SaveToFile(Temp("Foo.xml"));
+			File.ReadAllText(Temp("Foo.xml")).ShouldEqual(@"
+				<?xml version='1.0' encoding='utf-8'?>
+				<dogs>
+				  <dog name='Different'>My Text</dog>
+				</dogs>".FixXml());
+		}
+
 	// TODO
 
 		[Test][Ignore]
