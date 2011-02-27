@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>MvcContrib</id>
+    <version>2.0.95.0</version>
+    <description>MvcContrib was designed to add functionality and ease-of-use to Microsoft's ASP.NET MVC Framework, MVC Contrib is useful for developers looking to develop and test UI elements on top of the ASP.NET MVC framework.</description>
+    <authors>
+      <author>Codeplex Foundation</author>
+    </authors>
+    <language>en-US</language>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <created>2010-10-25T22:55:35.0746+00:00</created>
+    <modified>2010-10-25T22:55:35.0756+00:00</modified>
+  </metadata>
+  <dependencies>
+    <dependency id="MicrosoftWebMvc" minversion="2.0" />
+  </dependencies>
+</package>

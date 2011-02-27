@@ -29,17 +29,17 @@ namespace SafeXml.Specs {
 			Directory.CreateDirectory(TempRoot);
 		}
 
-		public string ProjectRoot  { get { return Path.Combine(Directory.GetCurrentDirectory(), "..", ".."); } }
-		public string ExamplesRoot { get { return Path.Combine(ProjectRoot, "spec", "content", "examples");  } }
-		public string TempRoot     { get { return Path.Combine(ProjectRoot, "spec", "content", "tmp");       } }
+		public static string ProjectRoot  { get { return Path.Combine(Directory.GetCurrentDirectory(), "..", ".."); } }
+		public static string ExamplesRoot { get { return Path.Combine(ProjectRoot, "spec", "content", "examples");  } }
+		public static string TempRoot     { get { return Path.Combine(ProjectRoot, "spec", "content", "tmp");       } }
 
-		public string Example(params string[] parts) {
+		public static string Example(params string[] parts) {
 			var allParts = new List<string>(parts);
 			allParts.Insert(0, ExamplesRoot);
 			return Path.GetFullPath(Path.Combine(allParts.ToArray()));
 		}
 
-		public string Temp(params string[] parts) {
+		public static string Temp(params string[] parts) {
 			var allParts = new List<string>(parts);
 			allParts.Insert(0, TempRoot);
 			return Path.GetFullPath(Path.Combine(allParts.ToArray()));
