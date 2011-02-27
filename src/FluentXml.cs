@@ -178,7 +178,26 @@ namespace FluentXml {
 		/// <summary>Creates and returns a new node with the given tag name as a child of the XmlNode we call this on</summary>
 		public static XmlNode NewNode(this XmlNode node, string tag) {
 			if (node == null) return null;
-			var child = node.OwnerDocument.CreateElement(tag);
+
+			// look for a NamespaceURI ... if you CreateElement without setting this properly, 
+			// you can end up with ugly blank xmlns attributes ...
+			string xmlns = null;
+			var parent = node;
+			while (parent != null) {
+				if (! string.IsNullOrEmpty(parent.NamespaceURI)) {
+					xmlns = parent.NamespaceURI;
+					break;
+				} else
+					parent = parent.ParentNode;
+			}
+
+			XmlNode child;
+
+			if (xmlns == null)
+				child = node.OwnerDocument.CreateElement(tag);
+			else
+				child = node.OwnerDocument.CreateElement(tag, xmlns);
+
 			node.AppendChild(child);
 			return child;
 		}
