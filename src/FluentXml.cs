@@ -90,11 +90,7 @@ namespace FluentXml {
 		public static XmlNode Node(this XmlNode node, params string[] tags) {
 			if (node == null)     return null;
 			if (tags.Length == 0) return null;
-			if (tags.Length == 1) return node.Nodes(tags).FirstOrDefault();
-			var tagList = tags.ToList();
-			var theTag  = tagList.Last();
-			tagList.RemoveAt(tagList.Count - 1);
-			return node.Nodes(theTag).Where(n => n.HasParentNodes(tagList.ToArray())).FirstOrDefault();
+			return node.Nodes(tags).FirstOrDefault();
 		}
 
 		/// <summary>Returns whether or not the given node has parents with the tags provided (currently, ORDER MATTERS!)</summary>
@@ -134,6 +130,7 @@ namespace FluentXml {
 				return node.Nodes(n => n.Name.ToLower() == tag.ToLower());
 		} 	
 
+		// The way we do this with Node() is *completely* different ... we need to look at consolidating!
 		/// <summary>Get all of the nodes with the given tag, underneath each previous tag ... eg. Nodes("body", "ul", "li", "a")</summary>
 		public static List<XmlNode> Nodes(this XmlNode node, params string[] tags) {
 			var nodes = new List<XmlNode>();

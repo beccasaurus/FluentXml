@@ -229,6 +229,12 @@ namespace FluentXml.Specs {
 		public void can_find_nodes_that_are_under_other_nodes_by_calling_Nodes_with_multiple_tags() {
 			var doc = FluentXmlDocument.FromString(@"
 				<stuff>
+					<more>
+						<notThing>Ah ha! The first more has no thing!</notThing>
+						<other>
+						  <whatever/>
+						</other>
+					</more>
 					<thing>hi</thing>
 					<more>
 						<thing>more thing 1</thing>
