@@ -2,7 +2,7 @@
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>FluentXml</id>
-    <version>0.1.0.0</version>
+    <version>0.1.0.1</version>
     <authors>remi Taylor</authors>
     <description>Tiny set of XmlDocument extension methods for making it easier to parse XML</description>
     <projectUrl>https://github.com/remi/FluentXml</projectUrl>
