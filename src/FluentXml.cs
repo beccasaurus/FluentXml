@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 /// <summary>The FluentXml namespace.  Use this to get the FluentXml extension methods.</summary>
 namespace FluentXml {
@@ -85,13 +86,29 @@ namespace FluentXml {
 				return node.Nodes(tag).FirstOrDefault(); // TODO update this do it doesn't have to find ALL nodes!
 		}
 
-		/// <summary>Node("foo", "bar") is a shortcut for calling Node("foo").Node("bar")</summary>
+		/// <summary>Node("foo", "bar") returns the first "bar" found under a "foo"</summary>
 		public static XmlNode Node(this XmlNode node, params string[] tags) {
-			if (node == null) return null;
-			XmlNode result = node;
-			foreach (var tag in tags)
-				result = result.Node(tag);
-			return result;
+			if (node == null)     return null;
+			if (tags.Length == 0) return null;
+			if (tags.Length == 1) return node.Nodes(tags).FirstOrDefault();
+			var tagList = tags.ToList();
+			var theTag  = tagList.Last();
+			tagList.RemoveAt(tagList.Count - 1);
+			return node.Nodes(theTag).Where(n => n.HasParentNodes(tagList.ToArray())).FirstOrDefault();
+		}
+
+		/// <summary>Returns whether or not the given node has parents with the tags provided (currently, ORDER MATTERS!)</summary>
+		public static bool HasParentNodes(this XmlNode node, params string[] tags) {
+			if (node == null) return false;
+			var actualParentTags = new List<string>();
+			var parent = node.ParentNode;
+			while (parent != null) {
+				actualParentTags.Insert(0, parent.Name);
+				parent = parent.ParentNode;
+			}
+			var tagsAsString = string.Join(" ", actualParentTags.ToArray()).ToLower(); // gives us "first second third ..."
+			var regexToMatch = string.Join(".*", tags).ToLower();                      // gives us "first.*third"
+			return Regex.IsMatch(tagsAsString, regexToMatch);
 		}
 
 		/// <summary>Returns first node that match the given matcher (Func that should return true if it matches)</summary>

@@ -249,6 +249,40 @@ namespace FluentXml.Specs {
 			doc.Nodes("whatever thing").Select(x => x.Text()).ToArray().ShouldEqual(new string[]{ "other thing 1", "other thing 2" });
 		}
 
+	[Test]
+	public void can_find_first_node_under_a_particular_parent() {
+			var doc = FluentXmlDocument.FromString(@"
+				<stuff>
+					<thing>hi</thing>
+					<more>
+						<notThing>Ah ha! The first more has no thing!</notThing>
+						<other>
+						  <whatever/>
+						</other>
+					</more>
+					<more>
+						<thing>more thing 1</thing>
+						<thing>more thing 2</thing>
+						<whatever>
+							<thing>whatever thing 1</thing>
+						</whatever>
+					</more>
+					<other>
+						<whatever>
+							<thing>other thing 1</thing>
+							<thing>other thing 2</thing>
+						</whatever>
+					</other>
+				</stuff>	
+				");
+
+			doc.Node("thing").Text().ShouldEqual("hi");
+			doc.Node("more thing").Text().ShouldEqual("more thing 1");
+			doc.Node("other thing").Text().ShouldEqual("other thing 1");
+			doc.Node("whatever thing").Text().ShouldEqual("whatever thing 1");
+			doc.Node("other whatever thing").Text().ShouldEqual("other thing 1");
+	}
+
 	// TODO
 
 		[Test][Ignore]
