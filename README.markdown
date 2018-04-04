@@ -20,97 +20,101 @@ How to use it
 
 Sample XML:
 
-    <?xml version="1.0" encoding="utf-8"?>
-    <dogs>
-      <dog name="Rover" breed="Golden Retriever">
-        <toys>
-          <toy>Tennis Ball</toy>
-          <toy>Kong</toy>
-        </toys>
-      </dog>
-      <dog name="Snoopy" breed="Beagle">
-        <toys>
-          <toy>Charlie Brown's Football</toy>
-        </toys>
-      </dog>
-    </dogs> 
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<dogs>
+  <dog name="Rover" breed="Golden Retriever">
+    <toys>
+      <toy>Tennis Ball</toy>
+      <toy>Kong</toy>
+    </toys>
+  </dog>
+  <dog name="Snoopy" breed="Beagle">
+    <toys>
+      <toy>Charlie Brown's Football</toy>
+    </toys>
+  </dog>
+</dogs>
+```
 
 Sample usage:
 
-    using FluentXml;
+```cs
+using FluentXml;
 
-    // Note, you do NOT need to use FluentXmlDocument ... this all works with a regular XmlDocument.
-    var doc = FluentXmlDocument.FromFile("dogs.xml");
+// Note, you do NOT need to use FluentXmlDocument ... this all works with a regular XmlDocument.
+var doc = FluentXmlDocument.FromFile("dogs.xml");
 
-    >> doc.Node("dog").Attr("name");
-    "Rover"
+>> doc.Node("dog").Attr("name");
+"Rover"
 
-    >> doc.Node("dog toy").Text();      
-    "Tennis Ball"
+>> doc.Node("dog toy").Text();      
+"Tennis Ball"
 
-    >> doc.Nodes("dog")[0].Attrs();     
-    {{ "name", "Rover" }, { "breed", "Golden Retriever" }}
+>> doc.Nodes("dog")[0].Attrs();     
+{{ "name", "Rover" }, { "breed", "Golden Retriever" }}
 
-    >> doc.Nodes("dog")[1].Attrs(); 
-    {{ "name", "Snoopy" }, { "breed", "Beagle" }}
+>> doc.Nodes("dog")[1].Attrs(); 
+{{ "name", "Snoopy" }, { "breed", "Beagle" }}
 
-    >> doc.ToXml();
-    "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-    <dogs>
-      <dog name=\"Rover\" breed=\"Golden Retriever\">
-        <toys>
-          <toy>Tennis Ball</toy>
-          <toy>Kong</toy>
-        </toys>
-      </dog>
-      <dog name=\"Snoopy\" breed=\"Beagle\">
-        <toys>
-          <toy>Charlie Brown's Football</toy>
-        </toys>
-      </dog>
-    </dogs>"
+>> doc.ToXml();
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<dogs>
+  <dog name=\"Rover\" breed=\"Golden Retriever\">
+    <toys>
+      <toy>Tennis Ball</toy>
+      <toy>Kong</toy>
+    </toys>
+  </dog>
+  <dog name=\"Snoopy\" breed=\"Beagle\">
+    <toys>
+      <toy>Charlie Brown's Football</toy>
+    </toys>
+  </dog>
+</dogs>"
 
-    // Passing a second argument to Attr() sets the attribute value (just like with jQuery)
-    doc.Node("dog").Attr("name", "Changed!");
+// Passing a second argument to Attr() sets the attribute value (just like with jQuery)
+doc.Node("dog").Attr("name", "Changed!");
 
-    >> doc.ToXml();                              
-    "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-    <dogs>
-      <dog name=\"Changed!\" breed=\"Golden Retriever\">
-        <toys>
-          <toy>Tennis Ball</toy>
-          <toy>Kong</toy>
-        </toys>
-      </dog>
-      <dog name=\"Snoopy\" breed=\"Beagle\">
-        <toys>
-          <toy>Charlie Brown's Football</toy>
-        </toys>
-      </dog>
-    </dogs>"
+>> doc.ToXml();                              
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<dogs>
+  <dog name=\"Changed!\" breed=\"Golden Retriever\">
+    <toys>
+      <toy>Tennis Ball</toy>
+      <toy>Kong</toy>
+    </toys>
+  </dog>
+  <dog name=\"Snoopy\" breed=\"Beagle\">
+    <toys>
+      <toy>Charlie Brown's Football</toy>
+    </toys>
+  </dog>
+</dogs>"
 
-    // Passing an argument to Text() sets the text of this node (just like with jQuery)
-    doc.Node("toy").Text("new toy text");
+// Passing an argument to Text() sets the text of this node (just like with jQuery)
+doc.Node("toy").Text("new toy text");
 
-    >> doc.ToXml();                          
-    "<?xml version=\"1.0\" encoding=\"utf-8\"?>
-    <dogs>
-      <dog name=\"Changed!\" breed=\"Golden Retriever\">
-        <toys>
-          <toy>new toy text</toy>
-          <toy>Kong</toy>
-        </toys>
-      </dog>
-      <dog name=\"Snoopy\" breed=\"Beagle\">
-        <toys>
-          <toy>Charlie Brown's Football</toy>
-        </toys>
-      </dog>
-    </dogs>"
+>> doc.ToXml();                          
+"<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<dogs>
+  <dog name=\"Changed!\" breed=\"Golden Retriever\">
+    <toys>
+      <toy>new toy text</toy>
+      <toy>Kong</toy>
+    </toys>
+  </dog>
+  <dog name=\"Snoopy\" breed=\"Beagle\">
+    <toys>
+      <toy>Charlie Brown's Football</toy>
+    </toys>
+  </dog>
+</dogs>"
 
-    // You can also pass in a lambda to Node() or Nodes() to find a node that matches some arbitrary condition
-    >> doc.Node(n => n.Attr("name") != null && n.Attr("name").StartsWith("S")).Attr("name");
-    "Snoopy"
+// You can also pass in a lambda to Node() or Nodes() to find a node that matches some arbitrary condition
+>> doc.Node(n => n.Attr("name") != null && n.Attr("name").StartsWith("S")).Attr("name");
+"Snoopy"
+```
 
 That's all?
 -----------
